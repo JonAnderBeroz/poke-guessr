@@ -1,21 +1,12 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex gap-4">
-      <Image
-        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/78.png"
-        alt="Rapidash image"
-        height={250}
-        width={250}
-      />
-      <Image
-        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/78.png"
-        alt="Rapidash image"
-        height={250}
-        width={250}
-        className="brightness-0"
-      />
+    <main className="flex gap-8 flex-col">
+      <h1 className="text-5xl">¿Quien es ese Pokémon?</h1>
+      <Link href="/game" className="nes-btn is-primary px-7 py-2 m-auto">
+        Play
+      </Link>
     </main>
   );
 }
