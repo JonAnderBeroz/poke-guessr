@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 
-import {FormEvent, useContext, useEffect, useState} from "react";
+import {FormEvent, useContext, useEffect, useMemo, useState} from "react";
 import {useRouter} from "next/navigation";
 import ConfettiEffect from "./confetty";
 import padEnd from "@/utils/array-padEnd";
 import GameOverDialog from "./game-over-dialog";
 import {DifficultyContext} from "@/providers/difficulty-provider";
 import {Pokemon} from "@/type";
+import Timer from "./timer";
+import gameOver from "@/utils/game-over";
+import Link from "next/link";
 
 const DEFAULT_HEARTS = 3;
 
@@ -52,21 +55,30 @@ function Form({
 function Header({lifes, score}: {lifes: number; score: number}) {
   const {difficulty} = useContext(DifficultyContext);
 
-  const heartElement = Array(lifes)
-    .fill(0)
-    .map((i: number) => <i key={i} className="nes-icon is-large heart"></i>);
+  const heartElement = useMemo(
+    () =>
+      Array(lifes)
+        .fill(0)
+        .map((i: number) => <i key={i} className="nes-icon is-large heart"></i>),
+    [lifes],
+  );
 
   return (
     <header className="flex flex-col gap-6">
-      {difficulty !== "easy" && (
-        <article className="flex gap-2">
-          {padEnd<React.JSX.Element>(
-            heartElement,
-            DEFAULT_HEARTS,
-            <i className="nes-icon is-large heart is-empty "></i>,
-          )}
-        </article>
-      )}
+      <article className="flex gap-2 items-center justify-between">
+        {difficulty !== "Fácil" ? (
+          <span>
+            {padEnd<React.JSX.Element>(
+              heartElement,
+              DEFAULT_HEARTS,
+              <i className="nes-icon is-large heart is-empty "></i>,
+            )}
+          </span>
+        ) : (
+          <Link href="/">Atras</Link>
+        )}
+        {difficulty === "Insano" && <Timer timeEnded={gameOver} />}
+      </article>
       <span className="text-center text-6xl">{score}</span>
     </header>
   );
@@ -100,15 +112,12 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
 
     input.value = "";
     setCorrect(false);
-    if (difficulty !== "easy") setLifes(lifes - 1);
+    if (difficulty !== "Fácil") setLifes(lifes - 1);
   }
 
   useEffect(() => {
     if (lifes > 0) return;
-    const modal: HTMLDialogElement = document.getElementById(
-      "dialog-dark-rounded",
-    ) as HTMLDialogElement;
-    modal.showModal();
+    gameOver();
   }, [lifes]);
 
   function generatePokemon({input}: {input: HTMLInputElement}) {

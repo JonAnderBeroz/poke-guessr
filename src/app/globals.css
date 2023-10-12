@@ -7,14 +7,14 @@
 
 @font-face {
   font-family: "pokemon-hollow";
-  src: url('./fonts/pokemon-hollow.woff');
+  src: url('../fonts/pokemon-hollow.woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "pokemon-solid";
-  src: url('./fonts/pokemon-solid.woff');
+  src: url('../fonts/pokemon-solid.woff');
   font-weight: normal;
   font-style: normal;
 }
