@@ -2,14 +2,84 @@
 
 import Image from "next/image";
 
-import Pokemon from "@/type";
-import {FormEvent, useState} from "react";
+import {FormEvent, useContext, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import ConfettiEffect from "./confetty";
+import padEnd from "@/utils/array-padEnd";
+import GameOverDialog from "./game-over-dialog";
+import {DifficultyContext} from "@/providers/difficulty-provider";
+import {Pokemon} from "@/type";
+
+const DEFAULT_HEARTS = 3;
+
+function Form({
+  correct,
+  onFormSubmit,
+}: {
+  onFormSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  correct: boolean;
+}) {
+  const {difficulty} = useContext(DifficultyContext);
+  const router = useRouter();
+  function handleClick() {
+    router.refresh();
+  }
+  return (
+    <form onSubmit={onFormSubmit} className="flex gap-2">
+      <input
+        autoComplete="off"
+        name="pokemonName"
+        type="text"
+        id="dark_field"
+        className={`nes-input is-dark outline-none h-24 ${!correct && "is-error"}`}
+        placeholder="Pikachu, Pidgey ..."
+      ></input>
+
+      <article className="flex flex-col justify-center">
+        <button type="submit" className="nes-btn is-primary">
+          Adivinar
+        </button>
+        {(difficulty === "Fácil" || difficulty === "Normal") && (
+          <button type="button" onClick={handleClick} className="nes-btn is-primary">
+            Escapar
+          </button>
+        )}
+      </article>
+    </form>
+  );
+}
+
+function Header({lifes, score}: {lifes: number; score: number}) {
+  const {difficulty} = useContext(DifficultyContext);
+
+  const heartElement = Array(lifes)
+    .fill(0)
+    .map((i: number) => <i key={i} className="nes-icon is-large heart"></i>);
+
+  return (
+    <header className="flex flex-col gap-6">
+      {difficulty !== "easy" && (
+        <article className="flex gap-2">
+          {padEnd<React.JSX.Element>(
+            heartElement,
+            DEFAULT_HEARTS,
+            <i className="nes-icon is-large heart is-empty "></i>,
+          )}
+        </article>
+      )}
+      <span className="text-center text-6xl">{score}</span>
+    </header>
+  );
+}
 
 export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [correct, setCorrect] = useState<boolean>(true);
+  const [score, setScore] = useState<number>(0);
+  const [lifes, setLifes] = useState<number>(DEFAULT_HEARTS);
+
+  const {difficulty} = useContext(DifficultyContext);
+
   const router = useRouter();
 
   function onFormSubmit(e: FormEvent<HTMLFormElement>) {
@@ -20,15 +90,26 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
       sensitivity: "base",
       ignorePunctuation: true,
     });
-    if (truthy < 0) {
-      input.value = "";
-      setCorrect(false);
+    if (truthy === 0) {
+      setScore(score + 1);
+      setCorrect(true);
+      setVisible(true);
+      generatePokemon({input: input});
       return;
     }
-    setCorrect(true);
-    setVisible(true);
-    generatePokemon({input: input});
+
+    input.value = "";
+    setCorrect(false);
+    if (difficulty !== "easy") setLifes(lifes - 1);
   }
+
+  useEffect(() => {
+    if (lifes > 0) return;
+    const modal: HTMLDialogElement = document.getElementById(
+      "dialog-dark-rounded",
+    ) as HTMLDialogElement;
+    modal.showModal();
+  }, [lifes]);
 
   function generatePokemon({input}: {input: HTMLInputElement}) {
     setTimeout(() => {
@@ -41,6 +122,8 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
   return (
     <>
       {visible && <ConfettiEffect />}
+      <GameOverDialog answer={pokemon.name} score={score} />
+      <Header lifes={lifes} score={score} />
       <Image
         src={pokemon.image}
         alt="Rapidash image"
@@ -48,18 +131,7 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
         width={350}
         className={`${!visible && "brightness-0"} self-center`}
       />
-      <form onSubmit={onFormSubmit} className="flex gap-2">
-        <input
-          name="pokemonName"
-          type="text"
-          id="dark_field"
-          className={`nes-input is-dark ${!correct && "is-error"}`}
-          placeholder="Pikachu, Pidgey ..."
-        ></input>
-        <button type="submit" className="nes-btn is-primary">
-          Adivinar
-        </button>
-      </form>
+      <Form onFormSubmit={onFormSubmit} correct={correct}></Form>
     </>
   );
 }
