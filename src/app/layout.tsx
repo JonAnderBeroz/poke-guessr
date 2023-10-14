@@ -1,7 +1,7 @@
 import {createContext} from "vm";
 import "./globals.css";
 import type {Metadata} from "next";
-import DifficultyProvider from "../providers/difficulty-provider";
+import {DifficultyProvider} from "@/providers/difficulty-provider";
 
 export const metadata: Metadata = {
   title: "PokeGuessr",

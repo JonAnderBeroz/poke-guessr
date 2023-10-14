@@ -12,8 +12,9 @@ import {Pokemon} from "@/type";
 import Timer from "./timer";
 import gameOver from "@/utils/game-over";
 import Link from "next/link";
-
-const DEFAULT_HEARTS = 3;
+import isEqual from "@/utils/isEqual";
+import {DEFAULT_HEARTS} from "@/defaults";
+import {GameStateContext} from "@/providers/game-state-provider";
 
 function Form({
   correct,
@@ -52,8 +53,12 @@ function Form({
   );
 }
 
-function Header({lifes, score}: {lifes: number; score: number}) {
+function Header() {
   const {difficulty} = useContext(DifficultyContext);
+  const {
+    score: {score},
+    lifes: {lifes},
+  } = useContext(GameStateContext);
 
   const heartElement = useMemo(
     () =>
@@ -87,8 +92,11 @@ function Header({lifes, score}: {lifes: number; score: number}) {
 export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [correct, setCorrect] = useState<boolean>(true);
-  const [score, setScore] = useState<number>(0);
-  const [lifes, setLifes] = useState<number>(DEFAULT_HEARTS);
+  const {
+    score: {score, setScore},
+    lifes: {lifes, setLifes},
+    time: {setTime},
+  } = useContext(GameStateContext);
 
   const {difficulty} = useContext(DifficultyContext);
 
@@ -98,12 +106,9 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
     e.preventDefault();
     const form: HTMLFormElement = e.target as HTMLFormElement;
     const input = form.elements.namedItem("pokemonName") as HTMLInputElement;
-    const truthy = input.value.localeCompare(pokemon.name, "es", {
-      sensitivity: "base",
-      ignorePunctuation: true,
-    });
-    if (truthy === 0) {
-      setScore(score + 1);
+    const truthy = isEqual(input.value, pokemon.name);
+    if (truthy) {
+      setScore!(score + 1);
       setCorrect(true);
       setVisible(true);
       generatePokemon({input: input});
@@ -112,7 +117,7 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
 
     input.value = "";
     setCorrect(false);
-    if (difficulty !== "Fácil") setLifes(lifes - 1);
+    if (difficulty !== "Fácil") setLifes!(lifes - 1);
   }
 
   useEffect(() => {
@@ -121,6 +126,7 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
   }, [lifes]);
 
   function generatePokemon({input}: {input: HTMLInputElement}) {
+    setTime!(13);
     setTimeout(() => {
       router.refresh();
       setVisible(false);
@@ -132,7 +138,7 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
     <>
       {visible && <ConfettiEffect />}
       <GameOverDialog answer={pokemon.name} score={score} />
-      <Header lifes={lifes} score={score} />
+      <Header />
       <Image
         src={pokemon.image}
         alt="Rapidash image"
