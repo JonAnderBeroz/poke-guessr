@@ -1,5 +1,6 @@
 "use client";
 
+import {revalidatePath} from "next/cache";
 import Image from "next/image";
 
 import Link from "next/link";
@@ -83,7 +84,7 @@ function Form({
 
   function handleClick() {
     playSound({path: "/music/runAway.mp3", volume: 0.5, startFrom: 0.2});
-    router.refresh();
+    revalidatePath("/game");
   }
 
   return (

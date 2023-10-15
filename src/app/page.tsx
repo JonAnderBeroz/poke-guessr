@@ -8,7 +8,7 @@ export default function Home() {
       <h1 className="text-5xl text-center">
         ¿Quien es <br /> ese <br /> Pokémon?
       </h1>
-      <Link className="nes-btn is-primary px-7 py-2 m-auto" href="/game">
+      <Link className="nes-btn is-primary px-7 py-2 m-auto" href="/game" prefetch={false}>
         Play
       </Link>
       <DifficultySelector />
