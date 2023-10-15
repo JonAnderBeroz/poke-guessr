@@ -26,7 +26,7 @@ function Header({active}: {active: boolean}) {
     () =>
       Array(lifes)
         .fill(0)
-        .map((i: number, index: number) => <i key={index} className="nes-icon is-large heart" />),
+        .map((_, index: number) => <i key={index} className="nes-icon is-large heart" />),
     [lifes],
   );
 
