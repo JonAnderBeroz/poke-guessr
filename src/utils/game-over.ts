@@ -1,6 +1,7 @@
-export default function gameOver() {
+export function gameOver() {
   const modal: HTMLDialogElement = document.getElementById(
     "dialog-dark-rounded",
   ) as HTMLDialogElement;
+
   modal.showModal();
 }

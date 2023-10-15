@@ -1,22 +1,24 @@
 "use client";
 
-import {DifficultyContext} from "@/providers/difficulty-provider";
-import isEqual from "@/utils/isEqual";
 import {useContext} from "react";
+
 import {OPTIONS} from "@/defaults";
+import {DifficultyContext} from "@/providers";
+import {isEqual} from "@/utils";
 
 export default function DifficultySelector() {
   const {difficulty, setDifficulty} = useContext(DifficultyContext);
+
   return (
     <section className="flex gap-3 flex-wrap justify-center">
       {OPTIONS.map((option, i) => {
         return (
           <label key={i}>
             <input
-              type="radio"
+              checked={isEqual(option, difficulty)}
               className="nes-radio is-dark"
               name="answer-dark"
-              checked={isEqual(option, difficulty)}
+              type="radio"
               onChange={() => {
                 setDifficulty!(option);
               }}

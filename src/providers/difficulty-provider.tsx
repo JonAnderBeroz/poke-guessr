@@ -1,7 +1,8 @@
 "use client";
 
-import {Difficulty} from "@/type";
 import {Dispatch, ReactNode, SetStateAction, createContext, useContext, useState} from "react";
+
+import {Difficulty} from "@/type";
 
 export const DifficultyContext = createContext<{
   difficulty: Difficulty;
@@ -12,6 +13,7 @@ export function DifficultyProvider({children}: {children: ReactNode}) {
   const [difficulty, setDifficulty] = useState<Difficulty>("Fácil");
 
   const difficultyStore = {difficulty, setDifficulty};
+
   return (
     <DifficultyContext.Provider value={difficultyStore}>{children}</DifficultyContext.Provider>
   );
@@ -19,5 +21,6 @@ export function DifficultyProvider({children}: {children: ReactNode}) {
 
 export function useDifficultyContext(): Difficulty {
   const {difficulty} = useContext(DifficultyContext);
+
   return difficulty;
 }

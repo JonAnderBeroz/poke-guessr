@@ -1,10 +1,12 @@
 import api from "@/api";
-import AnswerForm from "./answer-form";
+import {GameStateProvider} from "@/providers";
 import {Pokemon} from "@/type";
-import GameStateProvider from "@/providers/game-state-provider";
+
+import AnswerForm from "./answer-form";
 
 export default async function GameWindow() {
   const pokemon: Pokemon = await api.random();
+
   return (
     <main className="flex gap-4 flex-col">
       <GameStateProvider>

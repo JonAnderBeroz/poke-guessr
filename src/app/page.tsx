@@ -1,5 +1,6 @@
-import DifficultySelector from "@/components/difficulty-selector";
 import Link from "next/link";
+
+import DifficultySelector from "@/components/difficulty-selector";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <h1 className="text-5xl text-center">
         ¿Quien es <br /> ese <br /> Pokémon?
       </h1>
-      <Link href="/game" className="nes-btn is-primary px-7 py-2 m-auto">
+      <Link className="nes-btn is-primary px-7 py-2 m-auto" href="/game">
         Play
       </Link>
       <DifficultySelector />
