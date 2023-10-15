@@ -8,7 +8,7 @@ import {OPTIONS} from "@/defaults";
 export default function DifficultySelector() {
   const {difficulty, setDifficulty} = useContext(DifficultyContext);
   return (
-    <section className="flex gap-3">
+    <section className="flex gap-3 flex-wrap justify-center">
       {OPTIONS.map((option, i) => {
         return (
           <label key={i}>

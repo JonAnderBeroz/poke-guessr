@@ -12,7 +12,7 @@ const testContext = createContext();
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <body className="grid place-content-center h-screen w-screen">
+      <body className="grid place-content-center h-screen w-screen p-4">
         <DifficultyProvider>{children}</DifficultyProvider>
       </body>
     </html>

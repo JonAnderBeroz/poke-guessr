@@ -1,23 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "../../node_modules/nes.css/css/nes.css";
-
 /* https://nostalgic-css.github.io/NES.css/ */
-
-@font-face {
-  font-family: "pokemon-hollow";
-  src: url('../fonts/pokemon-hollow.woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "pokemon-solid";
-  src: url('../fonts/pokemon-solid.woff');
-  font-weight: normal;
-  font-style: normal;
-}
+@import "../../node_modules/nes.css/css/nes.css";
+@import url('./fonts.css');
 
 body {
   color-scheme: dark light;
