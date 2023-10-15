@@ -82,6 +82,7 @@ function Form({
   const router = useRouter();
 
   function handleClick() {
+    playSound({path: "/music/runAway.mp3", volume: 0.5, startFrom: 0.2});
     router.refresh();
   }
 
@@ -129,6 +130,7 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
     const truthy = isEqual(input.value, pokemon.name);
 
     if (truthy) {
+      playSound({path: "/music/catch.mp3", startFrom: 1});
       setActive(false);
       setScore!(score + 1);
       setCorrect(true);
@@ -137,7 +139,8 @@ export default function AnswerForm({pokemon}: {pokemon: Pokemon}) {
 
       return;
     }
-    playSound("/music/wallbump.mp3");
+
+    playSound({path: "/music/wallbump.mp3"});
     input.value = "";
     setCorrect(false);
     if (difficulty !== "Fácil") setLifes!(lifes - 1);
